@@ -2,14 +2,14 @@
 
 A fully functional, high-performance, full-stack e-commerce platform built with modern technologies.
 
-## 🌟 Features
+# Features
 - NextGen E-Commerce Features (Cart, Products, Wishlist)
 - Seller Portal for inventory management (`/seller-login` -> `/seller`)
 - JWT Authentication (Users vs. Sellers/Admins)
 - Firebase Social Login
 - REST API powered by Express & MongoDB
 
-## Tech Stack
+# Tech Stack
 - **Frontend**: React + Vite, TailwindCSS, Zustand, Three.js (React Three Fiber), React Router
 - **Backend**: Node.js, Express, MongoDB (Mongoose)
 - **Authentication**: JWT, bcryptjs (OAuth/OTP ready)
@@ -18,7 +18,7 @@ A fully functional, high-performance, full-stack e-commerce platform built with 
 
 ---
 
-## 🚀 Local Setup
+# Local Setup
 
 ### 1. Backend Setup
 1. Open terminal and navigate to `/backend`
