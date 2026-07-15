@@ -43,6 +43,14 @@ exports.getReviews = async (req, res) => {
 // @access  Private/Seller
 exports.getSellerReviews = async (req, res) => {
   try {
+    if (req.user.role === 'admin') {
+      const reviews = await Review.find({})
+        .populate('user_id', 'name')
+        .populate('product_id', 'title images')
+        .sort('-created_at');
+      return res.status(200).json({ success: true, count: reviews.length, data: reviews });
+    }
+
     // Find all product IDs owned by this seller
     const sellerProducts = await Product.find({ seller: req.user._id }).select('_id title');
     const sellerProductIds = sellerProducts.map(p => p._id);

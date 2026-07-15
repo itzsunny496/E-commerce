@@ -115,6 +115,14 @@ exports.getOrders = async (req, res) => {
 // @access  Private/Seller
 exports.getSellerOrders = async (req, res) => {
   try {
+    if (req.user.role === 'admin') {
+      const orders = await Order.find({})
+        .populate('user_id', 'name email')
+        .populate('product_ids', 'title price images seller')
+        .sort('-created_at');
+      return res.status(200).json({ success: true, count: orders.length, data: orders });
+    }
+
     // First, find all products owned by this seller
     const sellerProducts = await Product.find({ seller: req.user._id }).select('_id title');
     const sellerProductIds = sellerProducts.map(p => p._id);
