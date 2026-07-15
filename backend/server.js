@@ -9,12 +9,16 @@ const mongoose = require('mongoose');
 
 const app = express();
 
+// Trust proxy for rate limiter when deployed behind a reverse proxy (like Render)
+app.set('trust proxy', 1);
+
 // Security Middleware
 app.use(helmet());
 const allowedOrigins = (process.env.FRONTEND_URLS || process.env.FRONTEND_URL || 'http://localhost:5173').split(',').map((url) => url.trim());
 app.use(cors({
   origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
+    // Allow if it's in the allowed origins list or if it's a Vercel preview URL
+    if (!origin || allowedOrigins.includes(origin) || origin.endsWith('.vercel.app')) {
       return callback(null, true);
     }
     return callback(new Error(`CORS policy does not allow access from origin ${origin}`));
