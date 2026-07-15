@@ -33,7 +33,10 @@ export default function Products() {
         const params: Record<string, string> = {};
         const search = searchParams.get('search');
         if (search) params.search = search;
-        if (selectedCategory && selectedCategory !== 'All') params.category = selectedCategory;
+        if (selectedCategory && selectedCategory.toLowerCase() !== 'all') {
+          params.category = selectedCategory.toLowerCase();
+        }
+        params.limit = '1000'; // Fetch all products instead of defaulting to 10
 
         const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/products`, { params });
         setProducts(res.data.data || []);
@@ -72,8 +75,8 @@ export default function Products() {
             <h4 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-3">Categories</h4>
             <div className="space-y-2">
               {CATEGORIES.map((cat) => (
-                <label key={cat} className={`flex items-center gap-2.5 py-1 px-2 rounded-lg cursor-pointer hover:bg-slate-50 transition-colors text-sm ${selectedCategory === cat ? 'text-blue-600 font-semibold bg-blue-50/50' : 'text-slate-600'}`}>
-                  <input type="radio" name="category" checked={selectedCategory === cat} onChange={() => setSelectedCategory(cat)} className="accent-blue-600 w-4 h-4" />
+                <label key={cat} className={`flex items-center gap-2.5 py-1 px-2 rounded-lg cursor-pointer hover:bg-slate-50 transition-colors text-sm ${selectedCategory.toLowerCase() === cat.toLowerCase() ? 'text-blue-600 font-semibold bg-blue-50/50' : 'text-slate-600'}`}>
+                  <input type="radio" name="category" checked={selectedCategory.toLowerCase() === cat.toLowerCase()} onChange={() => setSelectedCategory(cat)} className="accent-blue-600 w-4 h-4" />
                   <span>{cat}</span>
                 </label>
               ))}
