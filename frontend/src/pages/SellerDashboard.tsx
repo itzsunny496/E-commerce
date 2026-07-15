@@ -529,7 +529,7 @@ export default function SellerDashboard() {
   const fetchData = useCallback(async () => {
     try {
       const [prodRes, orderRes] = await Promise.all([
-        api.get(user?.role === 'admin' ? '/api/products' : `/api/products?seller=${user?.id}`),
+        api.get(user?.role === 'admin' ? '/api/products?limit=1000' : `/api/products?seller=${user?.id}&limit=1000`),
         api.get(`/api/orders/seller`),
       ]);
       setProducts(prodRes.data.data || []);
