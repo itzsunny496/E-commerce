@@ -19,6 +19,7 @@ export default function ProductDetail() {
   const [reviewSuccess, setReviewSuccess] = useState('');
 
   const addToCart = useStore(state => state.addToCart);
+  const clearCart = useStore(state => state.clearCart);
   const wishlist = useStore(state => state.wishlist);
   const toggleWishlist = useStore(state => state.toggleWishlist);
   const user = useStore(state => state.user);
@@ -51,6 +52,7 @@ export default function ProductDetail() {
 
   const handleBuyNow = () => {
     if (!product) return;
+    clearCart();
     addToCart({
       id: product._id,
       title: product.title,
