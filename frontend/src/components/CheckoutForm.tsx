@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import api from '@/utils/api';
-import { useStore } from '@/store/useStore';
+import { CartItem } from '@/store/useStore';
 
 declare global {
   interface Window {
@@ -8,12 +8,10 @@ declare global {
   }
 }
 
-export default function CheckoutForm({ amount }: { amount: number }) {
+export default function CheckoutForm({ amount, items, onSuccess }: { amount: number; items: CartItem[]; onSuccess?: () => void }) {
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState('');
   const [succeeded, setSucceeded] = useState(false);
-  const cart = useStore(state => state.cart);
-  const clearCart = useStore(state => state.clearCart);
 
   const loadRazorpayScript = (): Promise<boolean> => {
     return new Promise((resolve) => {
@@ -38,9 +36,9 @@ export default function CheckoutForm({ amount }: { amount: number }) {
     }
 
     try {
-      // Create an order in backend from cart items first
+      // Create an order in backend from items first
       const orderPayload = {
-        items: cart.map(i => ({ product_id: i.id, quantity: i.quantity })),
+        items: items.map(i => ({ product_id: i.id, quantity: i.quantity })),
         total_amount: amount,
         shipping_address: null
       };
@@ -67,8 +65,7 @@ export default function CheckoutForm({ amount }: { amount: number }) {
           });
           if (verifyRes.data.success) {
             setSucceeded(true);
-            // clear cart after successful payment
-            clearCart();
+            if (onSuccess) onSuccess();
           } else setError('Payment verification failed.');
         },
         theme: { color: '#2563eb' },

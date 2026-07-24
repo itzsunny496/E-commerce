@@ -1,13 +1,37 @@
 import { useStore } from '@/store/useStore';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import CheckoutForm from '@/components/CheckoutForm';
+import { useState } from 'react';
 
 export default function Cart() {
-  const cart = useStore(state => state.cart);
-  const removeFromCart = useStore(state => state.removeFromCart);
-  const updateQuantity = useStore(state => state.updateQuantity);
+  const globalCart = useStore(state => state.cart);
+  const removeFromGlobalCart = useStore(state => state.removeFromCart);
+  const updateGlobalQuantity = useStore(state => state.updateQuantity);
+  const clearGlobalCart = useStore(state => state.clearCart);
   const user = useStore(state => state.user);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const isBuyNow = !!location.state?.buyNowItem;
+  const [localCart, setLocalCart] = useState(
+    isBuyNow ? [{ ...location.state.buyNowItem, quantity: 1 }] : []
+  );
+
+  const cart = isBuyNow ? localCart : globalCart;
+
+  const removeFromCart = (id: string) => {
+    if (isBuyNow) setLocalCart([]);
+    else removeFromGlobalCart(id);
+  };
+
+  const updateQuantity = (id: string, qty: number) => {
+    if (isBuyNow) {
+      if (qty <= 0) setLocalCart([]);
+      else setLocalCart(localCart.map(i => i.id === id ? { ...i, quantity: qty } : i));
+    } else {
+      updateGlobalQuantity(id, qty);
+    }
+  };
 
   const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const discount = Math.round(subtotal * 0.12);
@@ -134,7 +158,7 @@ export default function Cart() {
                   Sign In to Checkout
                 </button>
               ) : (
-                <CheckoutForm amount={finalAmount} />
+                <CheckoutForm amount={finalAmount} items={cart} onSuccess={() => { if (!isBuyNow) clearGlobalCart(); }} />
               )}
             </div>
           </div>

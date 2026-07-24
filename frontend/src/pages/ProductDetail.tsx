@@ -52,14 +52,16 @@ export default function ProductDetail() {
 
   const handleBuyNow = () => {
     if (!product) return;
-    clearCart();
-    addToCart({
-      id: product._id,
-      title: product.title,
-      price: product.price,
-      image: product.images?.[0] || '',
+    navigate('/cart', {
+      state: {
+        buyNowItem: {
+          id: product._id,
+          title: product.title,
+          price: product.price,
+          image: product.images?.[0] || '',
+        }
+      }
     });
-    navigate('/cart');
   };
 
   const handleReviewSubmit = async (e: React.FormEvent) => {
