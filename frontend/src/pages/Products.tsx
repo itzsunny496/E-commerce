@@ -64,7 +64,7 @@ export default function Products() {
 
   return (
     <div className="max-w-[1200px] mx-auto px-4 md:px-0 py-6 flex flex-col md:flex-row gap-6">
-      <aside className="w-full md:w-[240px] bg-white rounded-2xl border border-slate-200 p-5 shrink-0 self-start sticky top-20">
+      <aside className="w-full md:w-[240px] bg-white rounded-2xl border border-slate-200 p-5 shrink-0 self-start md:sticky md:top-20">
         <div className="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
           <h3 className="font-bold text-sm text-slate-800 uppercase tracking-wider">Filters</h3>
           <button onClick={() => { setSelectedCategory('All'); setPriceRange('all'); }} className="text-xs text-blue-600 hover:text-blue-700 font-semibold">Clear All</button>
